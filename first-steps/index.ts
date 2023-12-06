@@ -8,9 +8,15 @@ app.get("/hello", (_req, res) => {
 
 app.get("/bmi", (req, res) => {
   try {
-    res.send(
-      calculateBmi(Number(req.query["height"]), Number(req.query["weight"]))
-    );
+    const response = {
+      weight: Number(req.query["weight"]),
+      height: Number(req.query["height"]),
+      bmi: calculateBmi(
+        Number(req.query["height"]),
+        Number(req.query["weight"])
+      ),
+    };
+    res.send(response);
   } catch (error) {
     res.send(error.message);
   }

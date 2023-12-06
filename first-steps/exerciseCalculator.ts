@@ -8,9 +8,12 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (
-  exerciseHours: number[],
-  target: number
+export type ExerciseHours = number[];
+export type Target = number;
+
+export const calculateExercises = (
+  exerciseHours: ExerciseHours,
+  target: Target
 ): Result => {
   if (isNaN(target) || exerciseHours.some(isNaN)) {
     throw new Error("Provided values were not numbers!");
@@ -23,7 +26,7 @@ const calculateExercises = (
 
   let rating: number = average >= target ? 3 : average >= target / 2 ? 2 : 1;
 
-  let ratingDescription: string;
+  let ratingDescription: string = "";
   switch (rating) {
     case 3:
       ratingDescription = "target reached !";
@@ -37,7 +40,6 @@ const calculateExercises = (
     default:
       break;
   }
-  console.log(exerciseHours);
 
   return {
     periodLength,
@@ -49,10 +51,3 @@ const calculateExercises = (
     average,
   };
 };
-
-console.log(
-  calculateExercises(
-    process.argv.slice(3, process.argv.length).map((x) => Number(x)),
-    Number(process.argv[2])
-  )
-);

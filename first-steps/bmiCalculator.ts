@@ -1,5 +1,7 @@
-const calculateBmi = (height: number, weight: number): string => {
-  if (isNaN(height) || isNaN(weight)) {
+export const calculateBmi = (height: number, weight: number): string => {
+  if (!height || !weight) {
+    throw new Error("Missing parameters!");
+  } else if (isNaN(height) || isNaN(weight)) {
     throw new Error("Provided values were not numbers!");
   }
 
@@ -29,5 +31,3 @@ const calculateBmi = (height: number, weight: number): string => {
 
   return "";
 };
-
-console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])));

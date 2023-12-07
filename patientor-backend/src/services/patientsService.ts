@@ -29,19 +29,34 @@ export const findById = (id: string): PatientWithoutSsn | undefined => {
   return patient;
 };
 
-// enum Gender {
-//   Male = "male",
-//   Female = "female",
-//   Other = "other",
-// }
+enum Gender {
+  Male = "male",
+  Female = "female",
+  Other = "other",
+}
+
+const isGender = (param: string): param is Gender => {
+  return Object.values(Gender)
+    .map((v) => v.toString())
+    .includes(param);
+};
+const parseGender = (gender: string): Gender => {
+  if (!gender || !isGender(gender)) {
+    throw new Error(`'${gender}' is not a gender!`);
+  }
+  return gender;
+};
 
 export const creteNewPatient = (req: Omit<Patient, "id">): Patient => {
   if (
     req.name === "" ||
     req.dateOfBirth === "" ||
-    req.gender === "" ||
+    !parseGender(req.gender) ||
     req.occupation === ""
   ) {
+    console.log(req);
+    console.log(parseGender(req.gender));
+
     throw new Error("No missing fields!");
   } else {
     const newPatient = {

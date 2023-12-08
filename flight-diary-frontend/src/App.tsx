@@ -47,16 +47,22 @@ function App() {
   };
 
   return (
-    <>
+    <div
+      style={{
+        textAlign: "center",
+        display: "flex-",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <h1>Flight Diaries</h1>
-
       <h2>Add New Diary</h2>
       {error && <div style={{ color: "red" }}>{error}</div>}
       <br />
       {/* {error !== "" ? <div>{error}</div> : null} */}
       <form onSubmit={handleSubmit}>
         <div>
-          Date:{" "}
+          <p>Date:</p>
           <input
             type="date"
             // onChange={({ target }) => setForm(target.value)}
@@ -66,7 +72,8 @@ function App() {
           />
         </div>
         <div>
-          Visibility: great
+          <p>Visibility:</p>
+          great
           <input
             type="radio"
             onChange={(event) =>
@@ -104,7 +111,8 @@ function App() {
           />
         </div>
         <div>
-          Weather: sunny
+          <p>Weather:</p>
+          sunny
           <input
             type="radio"
             onChange={(event) =>
@@ -152,7 +160,7 @@ function App() {
         </div>
         <div></div>
         <div>
-          Comment:{" "}
+          <p>Comment:</p>
           <input
             type="text"
             onChange={(event) =>
@@ -165,9 +173,18 @@ function App() {
         <input type="submit" value="Submit" />
       </form>
 
-      <ul>
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+      >
         {diaries.map((diary) => (
-          <li key={diary.id}>
+          <div
+            style={{
+              padding: "6px",
+              margin: "6px",
+              border: "1px solid black",
+            }}
+            key={diary.id}
+          >
             <h3>{diary.date}</h3>
             <div>
               <strong>ID: </strong>
@@ -181,10 +198,10 @@ function App() {
               <strong>Visibility: </strong>
               {diary.visibility}
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
-    </>
+      </div>
+    </div>
   );
 }
 

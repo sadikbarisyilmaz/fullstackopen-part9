@@ -1,4 +1,43 @@
 import data from "../../data/patients";
+import { Gender } from "../../data/patients";
+
+interface BaseEntry {
+  id: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: string[];
+}
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare";
+  healthCheckRating: HealthCheckRating;
+}
+interface HospitalEntry extends BaseEntry {
+  type: "Hospital";
+  healthCheckRating: HealthCheckRating;
+}
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+export enum HealthCheckRating {
+  "Healthy" = 0,
+  "LowRisk" = 1,
+  "HighRisk" = 2,
+  "CriticalRisk" = 3,
+}
+
+export type Entry =
+  | HospitalEntry
+  | OccupationalHealthcareEntry
+  | HealthCheckEntry;
+// Define special omit for unions
+// type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+//   ? Omit<T, K>
+//   : never;
+// // Define Entry without the 'id' property
+// type EntryWithoutId = UnionOmit<Entry, "id">;
 
 export interface Patient {
   id: string;
@@ -7,17 +46,19 @@ export interface Patient {
   ssn: string;
   gender: string;
   occupation: string;
+  entries: Entry[];
 }
 
-type PatientWithoutSsn = Omit<Patient, "ssn">;
+type PatientWithoutSsn = Omit<Patient, "ssn" | "entries">;
 
 const removeSnn = (): PatientWithoutSsn[] => {
-  return data.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+  return data.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
     id,
     name,
     dateOfBirth,
     gender,
     occupation,
+    entries,
   }));
 };
 
@@ -29,11 +70,11 @@ export const findById = (id: string): PatientWithoutSsn | undefined => {
   return patient;
 };
 
-enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other",
-}
+// export enum Gender {
+//   Male = "male",
+//   Female = "female",
+//   Other = "other",
+// }
 
 const isGender = (param: string): param is Gender => {
   return Object.values(Gender)

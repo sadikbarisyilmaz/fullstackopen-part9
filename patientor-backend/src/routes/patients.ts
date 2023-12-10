@@ -4,7 +4,6 @@ import {
   findById,
   safePatients,
 } from "../services/patientsService";
-findById;
 
 export const patientsRouter = express.Router();
 

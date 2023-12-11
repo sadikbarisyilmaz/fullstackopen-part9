@@ -123,19 +123,26 @@ export const creteNewPatient = (req: Omit<Patient, "id">): Patient => {
 };
 
 export const creteNewEntry = (req: Omit<Entry, "id">): Omit<Entry, "id"> => {
-  if (
-    req.description === "" ||
-    req.date === "" ||
-    req.diagnosisCodes ||
-    req.specialist === ""
-  ) {
-    throw new Error("No missing fields!");
-  } else {
-    const newEntry = {
-      id: Math.floor(Math.random() * 10000).toString(),
-      ...req,
-    };
+  // if (
+  //   req.description === "" ||
+  //   req.date === "" ||
+  //   req.diagnosisCodes ||
+  //   req.specialist === ""
+  // ) {
+  //   throw new Error("No missing fields!");
+  // } else {
+  //   const newEntry = {
+  //     id: Math.floor(Math.random() * 10000).toString(),
+  //     ...req,
+  //   };
 
-    return newEntry;
-  }
+  //   return newEntry;
+  // }
+  const newEntry = {
+    id: Math.floor(Math.random() * 10000).toString(),
+    ...req,
+  };
+  console.log(newEntry);
+
+  return newEntry;
 };

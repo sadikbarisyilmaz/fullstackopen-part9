@@ -1,42 +1,61 @@
 import data from "../../data/patients";
 import { Gender } from "../../data/patients";
 
+interface Diagnosis {
+  code: string;
+  name: string;
+  latin?: string;
+}
 interface BaseEntry {
   id: string;
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: string[];
-}
-interface OccupationalHealthcareEntry extends BaseEntry {
-  type: "OccupationalHealthcare";
-  healthCheckRating: HealthCheckRating;
-}
-interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
-  healthCheckRating: HealthCheckRating;
-}
-interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
-  healthCheckRating: HealthCheckRating;
+  diagnosisCodes?: Array<Diagnosis["code"]>;
 }
 
-export enum HealthCheckRating {
+// type NewBaseEntry = Omit<BaseEntry, "id">;
+
+enum HealthCheckRating {
   "Healthy" = 0,
   "LowRisk" = 1,
   "HighRisk" = 2,
   "CriticalRisk" = 3,
 }
 
-export type Entry =
-  | HospitalEntry
-  | OccupationalHealthcareEntry
-  | HealthCheckEntry;
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+interface SickLeave {
+  startDate: string;
+  endDate: string;
+}
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare";
+  employerName: string;
+  sickLeave?: SickLeave;
+}
+
+interface Discharge {
+  date: string;
+  criteria: string;
+}
+
+interface HospitalEntry extends BaseEntry {
+  type: "Hospital";
+  discharge: Discharge;
+}
+
+type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
+
 // Define special omit for unions
 // type UnionOmit<T, K extends string | number | symbol> = T extends unknown
 //   ? Omit<T, K>
 //   : never;
-// // Define Entry without the 'id' property
+// Define Entry without the 'id' property
 // type EntryWithoutId = UnionOmit<Entry, "id">;
 
 export interface Patient {
@@ -70,12 +89,6 @@ export const findById = (id: string): PatientWithoutSsn | undefined => {
   return patient;
 };
 
-// export enum Gender {
-//   Male = "male",
-//   Female = "female",
-//   Other = "other",
-// }
-
 const isGender = (param: string): param is Gender => {
   return Object.values(Gender)
     .map((v) => v.toString())
@@ -106,5 +119,23 @@ export const creteNewPatient = (req: Omit<Patient, "id">): Patient => {
     };
 
     return newPatient;
+  }
+};
+
+export const creteNewEntry = (req: Omit<Entry, "id">): Omit<Entry, "id"> => {
+  if (
+    req.description === "" ||
+    req.date === "" ||
+    req.diagnosisCodes ||
+    req.specialist === ""
+  ) {
+    throw new Error("No missing fields!");
+  } else {
+    const newEntry = {
+      id: Math.floor(Math.random() * 10000).toString(),
+      ...req,
+    };
+
+    return newEntry;
   }
 };

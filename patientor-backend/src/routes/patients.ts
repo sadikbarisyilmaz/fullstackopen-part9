@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  creteNewEntry,
   creteNewPatient,
   findById,
   safePatients,
@@ -24,6 +25,14 @@ patientsRouter.get("/:id", (req, res) => {
 patientsRouter.post("/", (req, res) => {
   try {
     res.send(creteNewPatient(req.body));
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
+});
+
+patientsRouter.post("/:id/entries", (req, res) => {
+  try {
+    res.send(creteNewEntry(req.body));
   } catch (error) {
     res.status(400).json(error.message);
   }
